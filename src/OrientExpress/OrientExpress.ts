@@ -1,18 +1,25 @@
-const http = require('http');
-const config = require('../common/config');
+/* eslint-disable node/no-unsupported-features/node-builtins */
 
-module.exports = class Application {
-  constructor(port) {
-    this.port = port;
+import http from 'http';
+import config from '../common/config';
+import { myReq, myRes, TErrorHandler, TMiddleWare, TNextFunction } from '../common/types.d';
+
+class Application {
+  public readonly server: http.Server;
+  public readonly middlewares: TMiddleWare[];
+  public errorHandler: TErrorHandler;
+
+  constructor() {
     this.server = this._createServer();
     this.middlewares = [];
+    this.errorHandler = null;
   }
 
-  use(middleware) {
+  use(middleware: TMiddleWare) {
     this.middlewares.push(middleware);
   }
 
-  _json = (res) => {
+  static _json = (res: myRes): void => {
     res.json = (data, statusCode = 200) => {
       res.writeHead(statusCode, {
         'Content-type': 'application/json',
@@ -21,21 +28,21 @@ module.exports = class Application {
     };
   };
 
-  _parseUrl(req) {
-    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+  static _parseUrl(req: myReq): void {
+    const parsedUrl = new URL(req.url ?? '', `http://${req.headers.host}`);
     if (config?.DEBUG) {
       console.log('parsedUrl', parsedUrl);
     }
     req.parsedUrl = parsedUrl;
   }
 
-  _createServer() {
-    return http.createServer((req, res) => {
-      this._parseUrl(req);
-      this._json(res);
+  _createServer(): http.Server {
+    return http.createServer((req: myReq, res: myRes) => {
+      Application._parseUrl(req);
+      Application._json(res);
       let body = '';
       let isRunNext = true;
-      const next = () => {
+      const next: TNextFunction = () => {
         isRunNext = true;
       };
       req.on('data', (partOfData) => {
@@ -52,15 +59,17 @@ module.exports = class Application {
             if (config?.DEBUG) {
               console.log('try middleware', this.middlewares[midCount]?.length);
             }
-            await this.middlewares[midCount](req, res, next);
+            await this.middlewares?.[midCount]?.(req, res, next);
           } catch (err) {
-            if (config?.DEBUG) {
-              console.log('i catch error', err.message);
-            }
-            if (this.errorHandler && typeof this.errorHandler === 'function') {
-              this.errorHandler(err, req, res);
-            } else {
-              throw err;
+            if (err instanceof Error) {
+              if (config?.DEBUG) {
+                console.log('i catch error', err.message);
+              }
+              if (this.errorHandler && typeof this.errorHandler === 'function') {
+                this.errorHandler(err, req, res);
+              } else {
+                throw err;
+              }
             }
           }
           midCount++;
@@ -73,22 +82,23 @@ module.exports = class Application {
     });
   }
 
-  listen(port, cb) {
+  listen(port: number, cb: () => void) {
     this.server.listen(port, cb);
   }
 
-  setErrorHandler(cb) {
+  setErrorHandler(cb: TErrorHandler) {
     this.errorHandler = cb;
   }
-  static bodyParser = (req, res, next) => {
+
+  static bodyParser: TMiddleWare = (req: myReq, _: myRes, next: () => void) => {
     if (config?.DEBUG) {
       console.log('bodyPArser');
       console.log('req.body', req.body);
-      if (req.body) {
+      if (req.body && typeof req.body === 'string') {
         console.log('JSON.parse(req.body)', JSON.parse(req.body));
       }
     }
-    if (req.body) {
+    if (req.body && typeof req.body === 'string') {
       req.body = JSON.parse(req.body);
     }
     if (config?.DEBUG) {
@@ -96,4 +106,6 @@ module.exports = class Application {
     }
     next();
   };
-};
+}
+
+export default Application;

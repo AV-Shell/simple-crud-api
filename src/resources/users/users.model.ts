@@ -1,15 +1,28 @@
-const { v4: uuidv4, validate: uuidCheck } = require('uuid');
-const { MyCustomError } = require('../../common/myCustomError');
+import { v4 as uuidv4, validate as uuidCheck } from 'uuid';
+import { MyCustomError } from '../../common/myCustomError';
+import { myAny } from '../../common/types.d';
 
-class Person {
-  constructor({ id = uuidv4(), name = 'USER', age = 0, hobbies = [] } = {}) {
-    this.id = id;
+export interface IUser {
+  id: string;
+  age: number;
+  name: string;
+  hobbies: Array<string>;
+}
+
+export class User {
+  public id: string;
+  public age: number;
+  public name: string;
+  public hobbies: Array<string>;
+
+  constructor({ name = 'USER', age = 0, hobbies = [] }: myAny = {}) {
+    this.id = uuidv4();
     this.name = name;
     this.age = age;
     this.hobbies = hobbies;
   }
 
-  static checkData(data) {
+  static checkData(data: myAny): Partial<IUser> {
     const { name, age, hobbies } = data ?? {};
     if (!name) {
       throw new MyCustomError('"name" is required field', 400);
@@ -30,13 +43,13 @@ class Person {
     if (!hobbies || !Array.isArray(hobbies)) {
       throw new MyCustomError('"hobbies" is not valid data. Must be an array', 400);
     }
+
+    return { name, age, hobbies };
   }
 
-  static checkID(id) {
+  static checkID(id: string) {
     if (!uuidCheck(id)) {
       throw new MyCustomError(`id: "${id}" is not a valid UUID`, 400);
     }
   }
 }
-
-module.exports = { Person };
