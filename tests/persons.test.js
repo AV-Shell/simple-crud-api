@@ -22,13 +22,13 @@ const usersRoutes = {
 };
 
 const TEST_PERSON_DATA = {
-  name: 'Maksim',
+  username: 'Maksim',
   age: 29,
   hobbies: ['Writing tests', 'Update old tasks', 'Have fun with Node JS course'],
 };
 
 const TEST_PERSON_DATA2 = {
-  name: 'Yura',
+  username: 'Yura',
   age: 38,
   hobbies: ['Create servers', 'Be serious'],
 };
@@ -68,7 +68,7 @@ describe('Users suite 1', () => {
         .expect('Content-Type', /json/);
 
       expect(typeof userResponse.body.id).toBe('string');
-      expect(userResponse.body.name).toBe(TEST_PERSON_DATA.name);
+      expect(userResponse.body.username).toBe(TEST_PERSON_DATA.username);
       expect(userResponse.body.age).toBe(TEST_PERSON_DATA.age);
       expect(userResponse.body.hobbies).toStrictEqual(TEST_PERSON_DATA.hobbies);
       userId = userResponse.body.id;
@@ -85,7 +85,7 @@ describe('Users suite 1', () => {
 
       expect(userResponse.body).toBeInstanceOf(Object);
       expect(userResponse.body.id).toBe(userId);
-      expect(userResponse.body.name).toBe(TEST_PERSON_DATA.name);
+      expect(userResponse.body.username).toBe(TEST_PERSON_DATA.username);
       expect(userResponse.body.age).toBe(TEST_PERSON_DATA.age);
       expect(userResponse.body.hobbies).toStrictEqual(TEST_PERSON_DATA.hobbies);
     });
@@ -102,7 +102,7 @@ describe('Users suite 1', () => {
 
       expect(userResponse.body).toBeInstanceOf(Object);
       expect(userResponse.body.id).toBe(userId);
-      expect(userResponse.body.name).toBe(TEST_PERSON_DATA2.name);
+      expect(userResponse.body.username).toBe(TEST_PERSON_DATA2.username);
       expect(userResponse.body.age).toBe(TEST_PERSON_DATA2.age);
       expect(userResponse.body.hobbies).toStrictEqual(TEST_PERSON_DATA2.hobbies);
     });
@@ -118,7 +118,7 @@ describe('Users suite 1', () => {
 
       expect(userResponse.body).toBeInstanceOf(Object);
       expect(userResponse.body.id).toBe(userId);
-      expect(userResponse.body.name).toBe(TEST_PERSON_DATA2.name);
+      expect(userResponse.body.username).toBe(TEST_PERSON_DATA2.username);
       expect(userResponse.body.age).toBe(TEST_PERSON_DATA2.age);
       expect(userResponse.body.hobbies).toStrictEqual(TEST_PERSON_DATA2.hobbies);
     });
@@ -194,7 +194,7 @@ describe('Users suite 2', () => {
           .expect('Content-Type', /json/);
 
         expect(typeof userResponse.body.id).toBe('string');
-        expect(userResponse.body.name).toBe(TEST_PERSON_DATA.name);
+        expect(userResponse.body.username).toBe(TEST_PERSON_DATA.username);
         expect(userResponse.body.age).toBe(TEST_PERSON_DATA.age);
         expect(userResponse.body.hobbies).toStrictEqual(TEST_PERSON_DATA.hobbies);
       }

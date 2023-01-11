@@ -5,29 +5,29 @@ import { myAny } from '../../common/types.d';
 export interface IUser {
   id: string;
   age: number;
-  name: string;
+  username: string;
   hobbies: Array<string>;
 }
 
 export class User {
   public id: string;
   public age: number;
-  public name: string;
+  public username: string;
   public hobbies: Array<string>;
 
-  constructor({ name = 'USER', age = 0, hobbies = [] }: myAny = {}) {
+  constructor({ username = 'USER', age = 0, hobbies = [] }: myAny = {}) {
     this.id = uuidv4();
-    this.name = name;
+    this.username = username;
     this.age = age;
     this.hobbies = hobbies;
   }
 
   static checkData(data: myAny): Partial<IUser> {
-    const { name, age, hobbies } = data ?? {};
-    if (!name) {
+    const { username, age, hobbies } = data ?? {};
+    if (!username) {
       throw new MyCustomError('"name" is required field', 400);
     }
-    if (!name || typeof name !== 'string') {
+    if (!username || typeof username !== 'string') {
       throw new MyCustomError('"name" is not valid data. Must be a string', 400);
     }
     if (!age) {
@@ -44,7 +44,7 @@ export class User {
       throw new MyCustomError('"hobbies" is not valid data. Must be an array', 400);
     }
 
-    return { name, age, hobbies };
+    return { username, age, hobbies };
   }
 
   static checkID(id: string) {

@@ -1,7 +1,7 @@
 import { User } from '../resources/users/users.model';
 
-// const UserDB: Array<User> = [new User(), new User(), new User()];
-const UserDB: Array<User> = [];
+const UserDB: Array<User> = [new User(), new User(), new User()];
+// const UserDB: Array<User> = [];
 
 const getAllUsers = (): User[] => UserDB.map((el) => ({ ...el }));
 
@@ -19,7 +19,7 @@ const updateUser = (user: Partial<User>, id: string) => {
   const currentUser = UserDB.find((x) => x.id === id);
   if (currentUser) {
     currentUser.age = user.age ?? currentUser.age;
-    currentUser.name = user.name ?? currentUser.name;
+    currentUser.username = user.username ?? currentUser.username;
     currentUser.hobbies = user.hobbies ?? currentUser.hobbies;
   }
   return currentUser;

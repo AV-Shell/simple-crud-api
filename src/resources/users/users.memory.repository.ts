@@ -15,8 +15,6 @@ export const getById = async (id: string) => {
 export const create = async (user: IUser) => DB.createUser(user);
 
 export const update = async (userData: Partial<IUser>, id: string) => {
-  console.log('update repo', userData);
-
   const user = await DB.updateUser(userData, id);
   if (!user) {
     throw new MyCustomError(`The user with id "${id}" was not found`);

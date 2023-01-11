@@ -7,6 +7,8 @@
     "start": "nodemon src/server.ts",
     "start:dev": "nodemon src/server.ts",
     "start:prod": "webpack && node ./dist/bundle.js",
+    "start:dev:multi": "cross-env multimode=multi nodemon src/server.ts",
+    "start:prod:multi": "webpack && cross-env multimode=multi node ./dist/bundle.js",
     "lint": "eslint --ext .js,.ts --fix src/",
     "test": "jest --noStackTrace --runInBand"
   },
@@ -32,6 +34,7 @@
     "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "5.5.0",
     "@typescript-eslint/parser": "5.5.0",
+    "cross-env": "^7.0.3",
     "eslint": "8.2.0",
     "eslint-config-airbnb-base": "15.0.0",
     "eslint-config-prettier": "8.3.0",

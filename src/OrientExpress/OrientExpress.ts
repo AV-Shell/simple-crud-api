@@ -75,8 +75,9 @@ class Application {
           midCount++;
         }
         if (isRunNext) {
-          res.statusCode = 404;
-          res.end('human friendly: No endpoints!   ¯\\_(ツ)_/¯');
+          // res.statusCode = 404;
+          res.json?.(`human friendly: No endpoints!  ¯\\_(ツ)_/¯`, 404);
+          // res.end('human friendly: No endpoints!   ¯\\_(ツ)_/¯');
         }
       });
     });
